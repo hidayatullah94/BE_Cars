@@ -293,7 +293,14 @@ const get_unitUser = async (req = request, res = response) => {
     const skip = (page - 1) * limit;
     const getDataByUser = await Unit.findMany({
       where: {
-        cabang_id: parseInt(cabang_id),
+        AND: [
+          {
+            aktif: true,
+          },
+          {
+            cabang_id: parseInt(cabang_id),
+          },
+        ],
       },
       orderBy: {
         jenis_kendaraan: "asc",

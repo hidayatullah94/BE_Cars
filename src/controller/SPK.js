@@ -1,5 +1,11 @@
 const { request, response } = require("express");
-const { SPK, APV_LK, LK } = require("../../prisma/conn");
+const {
+  SPK,
+  APV_LK,
+  LK,
+  Transaksi,
+  DetailServis,
+} = require("../../prisma/conn");
 
 const create_SPK = async (req = request, res = response) => {
   try {
@@ -131,6 +137,7 @@ const getall_SPK = async (req = request, res = response) => {
     });
   }
 };
+
 const getByUser = async (req = request, res = response) => {
   try {
     const { limit, page } = await req.query;
@@ -216,6 +223,7 @@ const getByUser = async (req = request, res = response) => {
     });
   }
 };
+
 const getDetail_SPK = async (req = request, res = response) => {
   try {
     const { id } = await req.params;
@@ -237,6 +245,7 @@ const getDetail_SPK = async (req = request, res = response) => {
         no_lk: true,
         bengkel: {
           select: {
+            id: true,
             nama: true,
             alamat: true,
           },
@@ -334,4 +343,44 @@ const getDetail_SPK = async (req = request, res = response) => {
     });
   }
 };
-module.exports = { create_SPK, getall_SPK, getDetail_SPK, getByUser };
+
+const update_SPK = async (req = request, res = response) => {
+  try {
+    const { id } = await req.params;
+    const { user_id, bengkel_id, prihal } = await req.body;
+
+    const updateData = await Transaksi.$transaction([
+      //update parent
+      SPK.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          user_id: user_id,
+          prihal: prihal,
+          bengkel_id: Number(bengkel_id),
+        },
+      }),
+      //update child
+    ]);
+
+    res.status(201).json({
+      succes: true,
+      message: "Data berhasil di update",
+      query: updateData,
+    });
+  } catch (error) {
+    res.status(500).json({
+      succes: false,
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  create_SPK,
+  getall_SPK,
+  getDetail_SPK,
+  getByUser,
+  update_SPK,
+};

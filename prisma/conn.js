@@ -21,6 +21,7 @@ const Transaksi = conn;
 const Tahapan_Leasing = conn.jenis_tahapan;
 const Pembayaran_Leasing = conn.pembayaran_leasing;
 const Unit_Leasing = conn.unit_leasing;
+const DetailServis = conn.detailservis;
 
 //modul
 module.exports = {
@@ -44,4 +45,5 @@ module.exports = {
   Tahapan_Leasing,
   Pembayaran_Leasing,
   Unit_Leasing,
+  DetailServis,
 };

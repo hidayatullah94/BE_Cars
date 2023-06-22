@@ -148,6 +148,13 @@ const login_user = async (req = request, res = response) => {
         message: "Nik tidak ditemukan",
       });
     }
+    const aktif = checkUser.status;
+    if (!aktif) {
+      return res.status(400).json({
+        status: false,
+        message: `Nik Sudah tidak aktif`,
+      });
+    }
 
     // check password
 
